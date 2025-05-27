@@ -3,12 +3,24 @@
   <test name="Login Test">
     <classes>
       <class name="org.lrtapptronik.tests.Test.ApptronikTest">
-        <methods>
+       <methods>
 		 <include name="loginTest"/>
 		 <include name="caseCreation"/>
          <include name="caseEscalation"/>
+          <include name="ClosureReason"/>
         </methods>
       </class>
     </classes>
   </test>
+    <test name="Test Set 2">
+        <classes>
+            <class name="org.lrtapptronik.tests.Test.ApptronikTest">
+                <methods>
+                    <include name="loginTest"/>
+                    <include name="caseCreation"/>
+                    <include name="custoReply"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite>

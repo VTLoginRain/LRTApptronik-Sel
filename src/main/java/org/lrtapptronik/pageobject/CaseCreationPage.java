@@ -90,6 +90,7 @@ public class CaseCreationPage {
         }
 
     }
+
     private void click(By locator, String logMessage) {
         WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);

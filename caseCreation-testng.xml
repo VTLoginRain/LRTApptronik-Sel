@@ -5,7 +5,7 @@
       <class name="org.lrtapptronik.tests.Test.ApptronikTest">
         <methods>
 		 <include name="loginTest"/>
-		<include name="caseCreation"/>
+		<include name="custoReply"/>
        </methods>
       </class>
     </classes>
