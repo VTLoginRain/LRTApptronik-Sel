@@ -6,11 +6,13 @@ import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.lrtapptronik.Utility.Utils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 
 import java.text.SimpleDateFormat;
@@ -51,13 +53,22 @@ public class BaseTest {
     }
 
 
-    //@AfterClass
-    public void tearDown() {
+    @AfterTest
+    public void deleteRecord() throws InterruptedException {
+
+// delete the record
+        test = extent.createTest("Deleting the created test record  ");
+        Utils del = new Utils(driver, wait, test);
+       del.delRecord();
+        test.pass("Test record is deleted.");
+        Thread.sleep(1000);
+        //Close the browser after generating report.
         if (driver != null) {
             driver.quit();
             test.log(Status.INFO, "Browser closed.");
 
         }
         extent.flush();
+
     }
 }

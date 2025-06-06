@@ -30,8 +30,8 @@ public class EscalationPage {
     public By caseDetailBan =By.xpath("//button[.//span[normalize-space()='Escalation Details']]");
     public By caseReasonVal=By.xpath("//lightning-formatted-text[normalize-space()='Hardware Malfunction']");
     public By escalRsn = By.xpath("//span[@class='test-id__field-label' and text()='Escalation Reason']");
-
-    public By RunIdVal= By.xpath("  //input[@name='RUN_ID__c']");
+    public By nextto = By.xpath("//button[normalize-space()='Submit']");
+    public By RunIdVal= By.xpath("//*[contains(text(),'RUN_ID')]/ancestor::div[contains(@class,'flowruntime-input')]//input");
 
 
 
@@ -55,8 +55,9 @@ public class EscalationPage {
     public void caseEscalations(){
 
         try {
+            CaseCreationPage obj =new CaseCreationPage(driver, wait, test);
+            test.info("Escalating Case Number:" +obj.caseSerialNum);
             click(accept, "Clicked on Accept Button.");
-
             // Wait for Mark Status as Complete button to become clickable
             WebElement btnStatus = wait.until(ExpectedConditions.elementToBeClickable(markStatusAsCom));
             ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btnStatus);
@@ -74,7 +75,7 @@ public class EscalationPage {
 
             // Wait for Escalate Page heading to load
             wait.until(ExpectedConditions.visibilityOfElementLocated(escalHeading));
-            test.log(Status.INFO, "On the Escalate Page");
+            test.log(Status.INFO, "Click On the Escalate Page");
 
             click(radioBtn, "Selected Engineering Team for Escalation");
 
@@ -99,7 +100,7 @@ public class EscalationPage {
             test.log(Status.INFO, "Case Details Entered.");
 
             // Click Next
-            click(nxtButton, "Proceeded to JIRA Details");
+            click(nxtButton, "Proceeded to JIRA Details by Clicking on Next button.");
 
         } catch (NoSuchElementException | InterruptedException e) {
             Assert.fail("Failed due to missing element or timeout.");
@@ -108,20 +109,20 @@ public class EscalationPage {
 
     public void fillJiraDetails(){
 
-        try{
-            selectDropdownValue("Priority", ConfigReader.get("Priority"));
-            selectDropdownValue("Blocking Status", ConfigReader.get("BlockingStatusDD"));
-            selectDropdownValue("Alpha System Number", ConfigReader.get("AlphaSysNum"));
-            driver.findElement(RunIdVal).sendKeys(ConfigReader.get("RUN_ID"));
-            selectDropdownValue("Operation", ConfigReader.get("OperationDD"));
-            click(jiraNextBtn, "JIRA Related Details Entered");
-            // Wait for Submit button and click
-            WebElement btnSubmit = wait.until(ExpectedConditions.elementToBeClickable(
-                    By.xpath("//button[@part='button' and text()='Submit']")));
-            btnSubmit.click();
-            test.log(Status.INFO, "Clicked on Submit Button.");
-
-        } catch (NoSuchElementException e) {
+try {
+    selectDropdownValue("Priority", ConfigReader.get("Priority"));
+    selectDropdownValue("Blocking Status", ConfigReader.get("BlockingStatusDD"));
+    selectDropdownValue("Alpha System Number", ConfigReader.get("AlphaSysNum"));
+    WebElement runIdInput = wait.until(ExpectedConditions.visibilityOfElementLocated(RunIdVal));
+    runIdInput.sendKeys(ConfigReader.get("RUN_ID"));
+    selectDropdownValue("Operation", ConfigReader.get("OperationDD"));
+    click(jiraNextBtn, "JIRA Related Details Entered");
+    // Wait for Submit button and click veena
+    WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(nextto));
+    submitButton.click();
+    test.log(Status.INFO, "Clicked on Submit Button.");
+}
+         catch (NoSuchElementException e) {
             Assert.fail("Failed due to missing element or timeout.");
         }
     }
@@ -142,7 +143,7 @@ public class EscalationPage {
         String expectedValueOwner = ConfigReader.get("EscalatedTo");
 
         if (areStringsEqualIgnoreCase(actualValueOwner, expectedValueOwner)) {
-            test.log(Status.PASS, "Values match > Actual value is :" +actualValueOwner+ " Expected values is :" +expectedValueOwner);
+            test.log(Status.PASS, "Values match > Actual value of case Owner selected was :" +actualValueOwner+ " matched with Expected values as :" +expectedValueOwner);
             System.out.println("Case Owner value is matched");
         } else {
             test.log(Status.FAIL, "Mismatch: Expected '" + expectedValueOwner + "', but got '" + actualValueOwner + "'");
@@ -155,7 +156,7 @@ public class EscalationPage {
         System.out.println("Status Value "+caseStaus);
         String expectedCaseStatus = ConfigReader.get("CaseStatus");
         if (areStringsEqualIgnoreCase(caseStaus, expectedCaseStatus)) {
-            test.log(Status.PASS, "Values match > Actual value is :" +caseStaus+ " Expected values is :" +expectedCaseStatus);
+            test.log(Status.PASS, "Values match > Actual value of Case status selected was :" +caseStaus+ " matched with Expected value as :" +expectedCaseStatus);
             System.out.println("Case status value is matched");
         } else {
             test.log(Status.FAIL, "Mismatch: Expected '" + expectedValueOwner + "', but got '" + actualValueOwner + "'");
@@ -173,7 +174,7 @@ public class EscalationPage {
         System.out.println("Escalation Details"+escDetailVal);
         String expectedCaseDetailVal = ConfigReader.get("EscalationDetail");
         if (areStringsEqualIgnoreCase(escDetailVal, expectedCaseDetailVal)) {
-            test.log(Status.PASS, "Values match > Actual value is :" +escDetailVal+ " Expected values is :" +expectedCaseDetailVal);
+            test.log(Status.PASS, " Actual value of Case details selected was:" +escDetailVal+ " matched with Expected value as :" +expectedCaseDetailVal);
             System.out.println("Case Detail is matched");
         } else {
             test.log(Status.FAIL, "Mismatch: Expected '" + expectedCaseDetailVal + "', but got '" + escDetailVal + "'");
@@ -188,7 +189,7 @@ public class EscalationPage {
         System.out.println("Escalation Reason value"+escRsnVal);
         String expectedCaseRsnVal = ConfigReader.get("EscalationReasonDD");
         if (areStringsEqualIgnoreCase(escRsnVal, expectedCaseRsnVal)) {
-            test.log(Status.PASS, "Values match > Actual value is :" +escRsnVal+ " Expected values is :" +expectedCaseRsnVal);
+            test.log(Status.PASS, "Actual value of Case reason selected was::" +escRsnVal+ " matched with Expected value as :" +expectedCaseRsnVal);
             System.out.println("Case Reason is matched");
         } else {
             test.log(Status.FAIL, "Mismatch: Expected '" + expectedCaseRsnVal + "', but got '" + escRsnVal + "'");
@@ -199,17 +200,18 @@ public class EscalationPage {
     private void click(By locator, String logMessage) {
         WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
-        element.click();
+         element.click();
         test.log(Status.INFO, logMessage);
     }
-
     private void selectDropdownValue(String label, String visibleText) {//veena
-        String dropdownButtonXpath = String.format("//button[@aria-label='%s']", label); //veena change it
-        String valueXpath = String.format("//span[text()='%s']", visibleText);//veena change it
-
-        click(By.xpath(dropdownButtonXpath), "Clicked on " + label + " Dropdown");
-        click(By.xpath(valueXpath), "Selected value for " + label + ": " + visibleText);
+        WebElement blockingStatusDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//span[normalize-space()='"+label+"']/ancestor::div[contains(@class, 'flowruntime-input')]//select")
+        ));
+// Interact using Selenium's Select class
+        Select select1 = new Select(blockingStatusDropdown);
+        select1.selectByVisibleText(visibleText);
     }
+
     public boolean areStringsEqualIgnoreCase(String actual, String expected) {//veena
         if (actual == null || expected == null) return false;
         return actual.trim().equalsIgnoreCase(expected.trim());

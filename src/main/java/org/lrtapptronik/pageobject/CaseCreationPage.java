@@ -28,7 +28,7 @@ public class CaseCreationPage {
     private WebDriver driver;
     private WebDriverWait wait;
     private ExtentTest test;
-    public String caseSerialNum;
+    public  static String caseSerialNum;
 
     public CaseCreationPage(WebDriver driver, WebDriverWait wait, ExtentTest test) {
         this.driver = driver;
@@ -72,7 +72,7 @@ public class CaseCreationPage {
 
         WebElement caseNum =wait.until(ExpectedConditions.presenceOfElementLocated(caseNumber));
 
-        String caseSerialNum = caseNum.getText();
+         caseSerialNum = caseNum.getText();
         test.log(Status.PASS, "Case Number : " + caseSerialNum);
         test.log(Status.INFO, "Verifying email now");
         click(openedFeed,"Opened Feed tab.");

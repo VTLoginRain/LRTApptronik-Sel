@@ -1,24 +1,98 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 <suite name="Login Suite">
-  <test name="Login Test">
+  <test name="Login Test and Case Creation">
     <classes>
       <class name="org.lrtapptronik.tests.Test.ApptronikTest">
        <methods>
 		 <include name="loginTest"/>
 		 <include name="caseCreation"/>
-         <include name="caseEscalation"/>
-          <include name="ClosureReason"/>
         </methods>
       </class>
     </classes>
   </test>
-    <test name="Test Set 2">
+    <test name="Case Escalation">
+        <classes>
+            <class name="org.lrtapptronik.tests.Test.ApptronikTest">
+                <methods>
+                    <include name="loginTest"/>
+                    <include name="caseCreation"/>
+                    <include name="caseEscalation"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Case Closure">
+        <classes>
+            <class name="org.lrtapptronik.tests.Test.ApptronikTest">
+                <methods>
+                    <include name="loginTest"/>
+                    <include name="caseCreation"/>
+                    <include name="caseEscalation"/>
+                    <include name="ClosureReason"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+   <test name="Case Reply">
         <classes>
             <class name="org.lrtapptronik.tests.Test.ApptronikTest">
                 <methods>
                     <include name="loginTest"/>
                     <include name="caseCreation"/>
                     <include name="custoReply"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="SF to Jira Case Update">
+        <classes>
+            <class name="org.lrtapptronik.tests.Test.ApptronikTest">
+                <methods>
+                    <include name="loginTest"/>
+                    <include name="caseCreation"/>
+                    <include name="caseEscalation"/>
+                    <include name="SFtoJiraStatusUpdate"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Jira to SF Case Update">
+        <classes>
+            <class name="org.lrtapptronik.tests.Test.ApptronikTest">
+                <methods>
+                    <include name="loginTest"/>
+                    <include name="caseCreation"/>
+                    <include name="caseEscalation"/>
+                    <include name="JiratoSFStatusUpdate"/>
+                </methods>
+            </class>
+        </classes>
+  <!--  </test>
+    <test name="SLA Time Check">
+   <classes>
+     <class name="org.lrtapptronik.tests.Test.ApptronikTest">
+       <methods>
+        <include name="loginTest"/>
+           <include name="caseCreation"/>
+           <include name="SLATeamCheck_Test1"/>
+           <include name="SLATeamCheck_Test2"/>
+           <include name="SLATeamCheck_Test3"/>
+           <include name="SLATeamCheck_Test4"/>
+           <include name="SLATeamCheck_Test5"/>
+           <include name="SLATeamCheck_Test6"/>
+           <include name="SLATeamCheck_Test7"/>
+      </methods>
+     </class>
+   </classes>-->
+ </test>
+    <test name="SLA Time Verification">
+        <classes>
+            <class name="org.lrtapptronik.tests.Test.ApptronikTest">
+                <methods>
+                    <include name="loginTest"/>
+                    <include name="caseCreation"/>
+                    <include name="SLATeamCheck_Test1"/>
+                    <include name="ChangeInFieldNoChangeInSLA"/>
                 </methods>
             </class>
         </classes>

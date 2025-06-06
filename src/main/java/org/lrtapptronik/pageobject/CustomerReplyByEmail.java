@@ -47,6 +47,7 @@ public class CustomerReplyByEmail {
                 break;
             }
         }
+        test.info("Outlook is Opened in new tab");
         driver.get( ConfigReader.get("outlook"));
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(25));
         wait.until(ExpectedConditions.visibilityOfElementLocated(userName)).sendKeys(ConfigReader.get("EmailID"),Keys.ENTER);
@@ -54,13 +55,15 @@ public class CustomerReplyByEmail {
         wait.until(ExpectedConditions.visibilityOfElementLocated(userPass)).sendKeys(ConfigReader.get("EmailPass"),Keys.ENTER);
 
         wait.until(ExpectedConditions.elementToBeClickable(submit)).click();
+
+        test.info("Entered Username and Password and clicked on submit.");
+        Thread.sleep(9000);
+        wait.until(ExpectedConditions.elementToBeClickable(searchtxt)).sendKeys("Sandbox",Keys.ENTER);
         Thread.sleep(9000);
 
-         wait.until(ExpectedConditions.elementToBeClickable(searchtxt)).sendKeys("Sandbox",Keys.ENTER);
-        Thread.sleep(9000);
-
+        test.info("Recent mail with Subject as Sanbox is selected");
         wait.until(ExpectedConditions.elementToBeClickable(selectEmail)).click();
-
+        test.info("Click Reply on recent selected email");
         wait.until(ExpectedConditions.elementToBeClickable(clickReply)).click();
 
         Thread.sleep(7000);
@@ -69,32 +72,45 @@ public class CustomerReplyByEmail {
 
         messageBody.sendKeys(ConfigReader.get("EmailReplyContent"));
         Thread.sleep(9000);
-
+         test.info("Customer types the email body->> via Automation");
         wait.until(ExpectedConditions.elementToBeClickable(sendBtn)).click();
-
+        test.info("Clicked on Send button ");
         //Signout Email
+        test.info("Clicking on Account option to SignOut");
         driver.findElement(clickAcc).click();
         Thread.sleep(1000);
+        test.info("Signing Out and closing the tab to switch to SF Application");
         driver.findElement(clickSignOut).click();
         //close the tab
         driver.close();
         driver.switchTo().window(originalWindow);
         Thread.sleep(1000);
 
-
+        test.info("Refreshing the Feed to see the latest email communication");
         WebElement refreshIcon = wait.until(ExpectedConditions.elementToBeClickable(seeRefreshBtn));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", refreshIcon);
         WebElement refreshButton = wait.until(ExpectedConditions.elementToBeClickable(clickRefresh));
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", refreshButton);
-
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", refreshButton);
 
         Thread.sleep(5000);
         WebElement emailBody = wait.until(ExpectedConditions.visibilityOfElementLocated(sentEmailContent));
         String message = emailBody.getText();
-        System.out.println("Email Body: " + message);
-
-
+        String firstLine = message.split("\\n")[0].replace("Email Body: ", "").trim();
+        System.out.println("$$$$$: " + firstLine);
+        test.info("Extracting the email communication sent by the customer from the feed as :" +firstLine);
+        if (firstLine.equalsIgnoreCase(ConfigReader.get("EmailReplyContent"))){
+            test.pass("Email content at the SF case Feed is :" +firstLine+ " matched with expected message sent from outtlook as :"+ConfigReader.get("EmailReplyContent"));
+            System.out.println("Pass");
+        }
+        driver.navigate().refresh();
+        Thread.sleep(5000);
+        String caseStatuss = driver.findElement(
+                By.xpath("//p[@title='Status']/following-sibling::p//lightning-formatted-text")
+        ).getText();
+        test.pass("Salesforce Case status is extracted  as:" +caseStatuss);
+       Thread.sleep(8000);
     }
 
 

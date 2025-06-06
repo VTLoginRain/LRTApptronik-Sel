@@ -20,7 +20,8 @@ public class ClosedReason  {
     public By closureRsn = By.xpath("//button[@name='Closure_Reason__c' and @role='combobox']");
     public By closedTab = By.xpath("//a[@title='Closed' and contains(@class, 'slds-path__link')]");
     public By nextArrow = By.xpath("//button[.//span[text()='Next']]");
-    public By doneBtn = By.xpath("  //button[normalize-space()='Done']");
+    public By doneBtn = By.xpath("//button[normalize-space()='Done']");
+    public By issueResolvedStatus = By.xpath("//span[@title='Issue Resolved']");
 
 
     public ClosedReason(WebDriver driver, WebDriverWait wait, ExtentTest test) {
@@ -32,19 +33,22 @@ public class ClosedReason  {
 
     public void closeBtnClick() throws InterruptedException {
 
-        click(nextArrow,"Click on Next button");
+        test.info("Click on Next button to see the Closed tab");
+        click(nextArrow,"Click on Next button to see the Closed tab");
         Thread.sleep(5000);
         click(closedTab,"Click on the Closed button");
+        test.info("Click on the Closed button");
         click(markStatusAsCom,"Click on Mark Status as Complete");
+        test.info("Click on Mark Status as Complete");
         Thread.sleep(5000);
         driver.findElement(closureRsn).click();
+        test.info("Edit dependencies page  to select Status as Closed and Closure Reason");
         Thread.sleep(5000);
-        driver.findElement(By.xpath("//span[@title='Issue Resolved']")).click(); //veena remove hardcoding here
+        driver.findElement(issueResolvedStatus).click();
+        test.info("Closure Reason is selected as Issue Resolved");
         Thread.sleep(5000);
         driver.findElement(doneBtn).click();
-
-
-
+        test.info("Clicked on the done button to close the case.");
 
     }
     private void click(By locator, String logMessage) throws InterruptedException {
