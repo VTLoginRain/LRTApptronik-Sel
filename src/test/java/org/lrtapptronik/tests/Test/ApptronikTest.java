@@ -24,8 +24,6 @@ public class ApptronikTest extends BaseTest {
         LoginPage loginPage = new LoginPage(driver, wait, test);
         loginPage.loginValidUser(ConfigReader.get("UName"), ConfigReader.get("Pwd"));
         test.log(Status.INFO, "Login is successful.");
-
-
     }
 
 
@@ -39,7 +37,7 @@ public class ApptronikTest extends BaseTest {
 
     @Test(dependsOnMethods = "caseCreation")
     public void caseEscalation() throws InterruptedException {
-        test = extent.createTest("Case Escalation");
+        test = extent.createTest("Case Escalation to Engineering");
         CaseCreationPage caseObj = new CaseCreationPage(driver, wait, test);
         EscalationPage escPage = new EscalationPage(driver, wait, test);
         escPage.caseEscalations();
@@ -47,6 +45,14 @@ public class ApptronikTest extends BaseTest {
         // Verification
         escPage.verifyEscalationFieldVal();
     }
+    @Test(dependsOnMethods = "caseCreation")
+    public void caseEscalatedToFieldService() throws InterruptedException {
+        test = extent.createTest("Case Escalation to Field Service");
+        CaseCreationPage caseObj = new CaseCreationPage(driver, wait, test);
+        EscalationPage escPage = new EscalationPage(driver, wait, test);
+        escPage.escalationTOFieldService();
+    }
+
 
     @Test (dependsOnMethods = "caseEscalation")
     public void ClosureReason() throws InterruptedException

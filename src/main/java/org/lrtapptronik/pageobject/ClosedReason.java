@@ -40,13 +40,14 @@ public class ClosedReason  {
         test.info("Click on the Closed button");
         click(markStatusAsCom,"Click on Mark Status as Complete");
         test.info("Click on Mark Status as Complete");
-        Thread.sleep(5000);
+        System.out.println("Clicked on Mark Status as Complete ");
+        Thread.sleep(10000);
         driver.findElement(closureRsn).click();
         test.info("Edit dependencies page  to select Status as Closed and Closure Reason");
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         driver.findElement(issueResolvedStatus).click();
         test.info("Closure Reason is selected as Issue Resolved");
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         driver.findElement(doneBtn).click();
         test.info("Clicked on the done button to close the case.");
 
@@ -57,5 +58,7 @@ public class ClosedReason  {
         WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
         Thread.sleep(5000);
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+
+
     }
 }

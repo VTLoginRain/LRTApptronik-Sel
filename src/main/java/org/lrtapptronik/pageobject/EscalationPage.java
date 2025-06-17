@@ -13,6 +13,8 @@ import java.time.Duration;
 
 public class EscalationPage {
 
+    public By submitBtn=By.xpath("//div[contains(@class, 'slds-float_right')]//button[text()='Submit']");
+    public By radioBtnField = By.xpath("//span[text()='Field Service Team']/ancestor::label/span");
     public By accept = By.xpath("//button[text()='Accept']");
     public By markStatusAsCom = By.xpath("//button[.//span[text()='Mark Status as Complete']]");
     public By escalateBtn = By.xpath("//button[text()='Escalate']");
@@ -23,7 +25,7 @@ public class EscalationPage {
     public By jiraNextBtn = By.xpath("//button[@part='button' and text()='Next']");
     public By radioBtn = By.xpath("//span[text()='Engineering Team']/ancestor::label/span");
     public By caseOwnVal = By.xpath("//span[contains(@class, 'owner-name')]//span[normalize-space(text())='Team LogicRain']");
-    public By detailTab =By.xpath("//a[@data-label='Details' and text()='Details']");
+    public By detailTab =By.xpath("//a[@id='detailTab__item' and text()='Details']");
     public By caseStatus =By.xpath("//div[@data-target-selection-name='sfdc:RecordField.Case.Status']//lightning-formatted-text");
     public By caseDetails= By.xpath("//span[@class='test-id__field-label' and normalize-space(text())='Escalation Details']");
     public By caseDetVal=By.xpath("//lightning-formatted-text[normalize-space()='Robot Inoperable in Customer Environment']");
@@ -112,7 +114,7 @@ public class EscalationPage {
 try {
     selectDropdownValue("Priority", ConfigReader.get("Priority"));
     selectDropdownValue("Blocking Status", ConfigReader.get("BlockingStatusDD"));
-    selectDropdownValue("Alpha System Number", ConfigReader.get("AlphaSysNum"));
+    selectDropdownValue("Apollo Number", ConfigReader.get("AlphaSysNum"));
     WebElement runIdInput = wait.until(ExpectedConditions.visibilityOfElementLocated(RunIdVal));
     runIdInput.sendKeys(ConfigReader.get("RUN_ID"));
     selectDropdownValue("Operation", ConfigReader.get("OperationDD"));
@@ -132,7 +134,8 @@ try {
 
         //Verifying Escalation Owner
         Thread.sleep(4000);
-        click(detailTab, "Clicked on Details Tab to verify the data");
+        driver.findElement(By.xpath("//a[@id='detailTab__item' and text()='Details']")).click();
+       // click(detailTab, "Clicked on Details Tab to verify the data");
         Thread.sleep(4000);
 
         WebElement scrollToCaseOwnVal= wait.until(ExpectedConditions.visibilityOfElementLocated(caseOwnVal));
@@ -216,5 +219,51 @@ try {
         if (actual == null || expected == null) return false;
         return actual.trim().equalsIgnoreCase(expected.trim());
     }
+
+    public void escalationTOFieldService() throws InterruptedException {
+        CaseCreationPage obj =new CaseCreationPage(driver, wait, test);
+        test.info("Escalating Case Number:" +obj.caseSerialNum);
+        click(accept, "Clicked on Accept Button.");
+        // Wait for Mark Status as Complete button to become clickable
+        WebElement btnStatus = wait.until(ExpectedConditions.elementToBeClickable(markStatusAsCom));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btnStatus);
+
+        // Wait for Escalate button to be visible
+        WebElement recClick = wait.until(ExpectedConditions.visibilityOfElementLocated(escalateBtn));
+        WebElement refreshButton = wait.until(ExpectedConditions.elementToBeClickable(escalateBtn));
+        Thread.sleep(5000);
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", refreshButton);
+        Thread.sleep(5000);
+
+
+        // Wait for Escalate Page heading to load
+        wait.until(ExpectedConditions.visibilityOfElementLocated(escalHeading));
+        test.log(Status.INFO, "Click On the Escalate Page");
+
+        click(radioBtnField, "Selected Field Service Team for Escalation");
+        wait.until(ExpectedConditions.presenceOfElementLocated(esclReason));
+        Select dropdown = new Select(driver.findElement(esclReason));
+
+        boolean reasonFound = dropdown.getOptions().stream()
+                .anyMatch(option -> option.getText().trim().equals(ConfigReader.get("EscalationReasonDD")));
+
+        if (reasonFound) {
+            dropdown.selectByVisibleText(ConfigReader.get("EscalationReasonDD"));
+            test.log(Status.INFO, "Selected Reason is : " +ConfigReader.get("EscalationReasonDD")+ ".");
+            escalReasn =ConfigReader.get("EscalationReasonDD");
+        } else {
+            throw new NoSuchElementException("Reason " +ConfigReader.get("EscalationReasonDD") + " not found in dropdown.");
+        }
+        // Enter escalation details
+        WebElement escDetail = wait.until(ExpectedConditions.elementToBeClickable(escalationdtl));
+        escDetail.click();
+        escDetail.sendKeys(ConfigReader.get("EscalationDetail"));
+        test.log(Status.INFO, "Case Details Entered.");
+        WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(submitBtn));
+        submitButton.click();
+
+    }
+
 
 }

@@ -2,6 +2,7 @@ package org.lrtapptronik.Utility;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
+import org.lrtapptronik.pageobject.CaseCreationPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -66,19 +67,17 @@ public class Utils   {
 
 
     public void delRecord() throws InterruptedException {
-       click(delete,"Deleting the created test record");
+        CaseCreationPage obj =new CaseCreationPage(driver, wait, test);
+        test.info("Escalating Case Number to be deleted:" +obj.caseSerialNum);
+        Thread.sleep(5000);
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(delete));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+      // click(delete,"Deleting the created test record");
+        Thread.sleep(5000);
+       driver.findElement(By.xpath("//button[contains(@class, 'slds-button') and text()='Delete']")).click();
+        //Thread.sleep(2000);
+        driver.findElement(By.xpath("//button[@title='Delete' and .//span[text()='Delete']]")).click();
 
-      /*  WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-      WebElement deleteButton = wait.until(
-                ExpectedConditions.elementToBeClickable(By.xpath("//button[@name='Delete']"))
-        );
-        deleteButton.click();
-      *//*  driver.findElement(deleteBtn).click();*//*
-
-        test.info("Clicked on the delete button");
-        driver.findElement(deleted).click();
-        test.info("Confirmed case to be deleted ");
-        Thread.sleep(4000);*/
     }
     public void click(By locator, String logMessage) {
         WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));

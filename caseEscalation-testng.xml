@@ -67,7 +67,7 @@
                 </methods>
             </class>
         </classes>
-  <!--  </test>
+  </test>
     <test name="SLA Time Check">
    <classes>
      <class name="org.lrtapptronik.tests.Test.ApptronikTest">
@@ -83,9 +83,9 @@
            <include name="SLATeamCheck_Test7"/>
       </methods>
      </class>
-   </classes>-->
+   </classes>
  </test>
-    <test name="SLA Time Verification">
+    <!--<test name="SLA Time Verification">
         <classes>
             <class name="org.lrtapptronik.tests.Test.ApptronikTest">
                 <methods>
@@ -96,5 +96,5 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 </suite>
