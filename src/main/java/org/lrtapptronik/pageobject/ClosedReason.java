@@ -15,13 +15,13 @@ public class ClosedReason  {
     private WebDriverWait wait;
     private ExtentTest test;
 
-
+    public By Edit = By.xpath("//span[h2[text()='Key Fields']]/a[@title='Edit Key Fields']//p[text()='Edit']");
     public By markStatusAsCom = By.xpath("//button[.//span[text()='Mark as Current Status']]");
-    public By closureRsn = By.xpath("//button[@name='Closure_Reason__c' and @role='combobox']");
+    public By closureRsn = By.xpath("//span[text()='Closure Reason']/ancestor::div[contains(@class, 'slds-form-element')]//a[@role='combobox']");
     public By closedTab = By.xpath("//a[@title='Closed' and contains(@class, 'slds-path__link')]");
     public By nextArrow = By.xpath("//button[.//span[text()='Next']]");
-    public By doneBtn = By.xpath("//button[normalize-space()='Done']");
-    public By issueResolvedStatus = By.xpath("//span[@title='Issue Resolved']");
+    public By save = By.xpath("(//button[@title='Save'])[2]");
+    public By collision = By.xpath("//a[@role='option' and normalize-space(text())='Collision']");
 
 
     public ClosedReason(WebDriver driver, WebDriverWait wait, ExtentTest test) {
@@ -38,18 +38,24 @@ public class ClosedReason  {
         Thread.sleep(5000);
         click(closedTab,"Click on the Closed button");
         test.info("Click on the Closed button");
+        click(Edit,"Click on Edit button to enter the closure Reason");
+        WebElement comboBox = wait.until(ExpectedConditions.elementToBeClickable(closureRsn));
+        comboBox.click();
+        WebElement optionCollision = wait.until(ExpectedConditions.elementToBeClickable(collision));
+        optionCollision.click();
+        Thread.sleep(3000);
+        test.info("Closure Reason is selected as : Collision");
+        By saveButton = By.xpath("(//button[@title='Save'])[2]");
+        driver.findElement(saveButton).click();
         click(markStatusAsCom,"Click on Mark Status as Complete");
         test.info("Click on Mark Status as Complete");
+
         System.out.println("Clicked on Mark Status as Complete ");
         Thread.sleep(10000);
-        driver.findElement(closureRsn).click();
-        test.info("Edit dependencies page  to select Status as Closed and Closure Reason");
-        Thread.sleep(1000);
-        driver.findElement(issueResolvedStatus).click();
-        test.info("Closure Reason is selected as Issue Resolved");
-        Thread.sleep(1000);
-        driver.findElement(doneBtn).click();
-        test.info("Clicked on the done button to close the case.");
+        test.pass("Salesforce Case is closed");
+
+        CaseCreationPage obj =new CaseCreationPage(driver, wait, test);
+        test.pass("Salesforce Case : " +obj.caseSerialNum + "is closed with Closure Reason as : Collision.");
 
     }
     private void click(By locator, String logMessage) throws InterruptedException {

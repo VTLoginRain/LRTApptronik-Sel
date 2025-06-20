@@ -59,7 +59,7 @@ public class BaseTest {
 // delete the record
         test = extent.createTest("Deleting the created test record  ");
         Utils del = new Utils(driver, wait, test);
-       del.delRecord();
+      del.delRecord();
         test.pass("Test record is deleted.");
         Thread.sleep(1000);
         //Close the browser after generating report.

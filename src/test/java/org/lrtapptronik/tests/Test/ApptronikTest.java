@@ -61,7 +61,6 @@ public class ApptronikTest extends BaseTest {
         test = extent.createTest("Closing the Salesforce Ticket with Closure Reason");
         ClosedReason closeRsn = new ClosedReason(driver, wait, test);
         closeRsn.closeBtnClick();
-        test.log(Status.INFO, "Closure Reason is mandatory to be selected. ");
     }
 
 

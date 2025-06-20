@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CaseCreationPage {
 
+
+    public By caseType = By.xpath("//select[@name='Case_Type']");
     public By showNavMenu = By.xpath("//button[@title='Show Navigation Menu']");
     public By clickCases = By.xpath("//span[contains(text(), 'Cases')]");
     public By newButton = By.xpath("//div[@title='New']");
@@ -62,11 +64,15 @@ public class CaseCreationPage {
 
 
     }
-    public void caseDetails(){
+    public void caseDetails() throws InterruptedException {
 
         wait.until(ExpectedConditions.elementToBeClickable(txtSubject)).sendKeys(ConfigReader.get("Subject"));
         test.log(Status.INFO, "Entered Subject: " +ConfigReader.get("Subject")+ ".");
+        WebElement caseTypeDropdown = driver.findElement(caseType);
+        Select select = new Select(caseTypeDropdown);
+        select.selectByVisibleText("Hardware");
 
+        Thread.sleep(5000);
         click(caseDetails,"Clicked Next (Case Details).");
         click(clickSubmit,"Clicked Submit.");
 
